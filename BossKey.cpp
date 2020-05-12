@@ -208,22 +208,20 @@ void ListWindow()
 		EnumWindows(EnumWindowsProc, List_Mode);
 	}
 	for (int i = 1; i <= wnum; ++i)
-		wcout << i << L" . " << windows[i].caption << endl;
-}
-//方案二
-/*
-windows[1].hd = GetDesktopWindow();
-	GetWindowText(windows[1].hd, windows[1].caption, 200);
-	windows[2].hd = GetWindow(windows[1].hd, GW_CHILD);
-	while (windows[wnum].hd != NULL)
 	{
-		GetWindowText(windows[wnum].hd, windows[wnum].caption, 200);
-		windows[wnum+1].hd = GetNextWindow(windows[wnum].hd, GW_HWNDNEXT);
-		++wnum;
+		wcout << i << " . ";
+		for (unsigned int j = 0; j < windows[i].caption.length(); ++j)
+		{
+			wcout << windows[i].caption[j];
+			if (!wcout)
+			{
+				wcout.clear();
+				wcout << L"!";
+			}
+		}
+		wcout << endl;
 	}
-	for (int i = 1; i <= wnum; i++)
-		wcout << i << ':' << windows[i].caption << endl;
-*/
+}
 
 BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam)
 {
