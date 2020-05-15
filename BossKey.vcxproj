@@ -156,6 +156,7 @@
     <ClCompile Include="BossKey.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BossKey.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

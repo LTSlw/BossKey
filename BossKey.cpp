@@ -3,59 +3,11 @@
 #include <cstring>
 #include <tchar.h>
 #include <windows.h>
+#include "BossKey.h"
 using namespace std;
-
-struct window
-{
-	HWND hd;
-	wstring caption;
-};
 
 int wnum = 0;
 window windows[1001]{};
-bool Get_EndLine = 0, Get_BadInput = 0;
-wstring HelpWord =
-LR"(BossKey帮助
-
- - List 列出窗口列表
-     [-a] 列出所有窗口（包括隐藏的窗口，标题为空的窗口)
-     [-e] 不列出标题不为空的窗口（默认）
-     [-t] 仅列出任务栏中的窗口 待
-     [-f] 刷新窗口列表
-     [-o] 不刷新窗口列表（默认）
- - Reg 热键设置 待
-     [-i] 注册热键（默认），与 -u 不共存
-     [-k] 热键（设置 -i 必须）
-     [-h] 指定hwnd
-     [-n] 窗口序号
-     [-u] 反注册热键
- - Hide 隐藏窗口
-     [-h] 指定hwnd
-     [-n] 窗口序号
- - Show 显示窗口
-     [-h] 指定hwnd
-     [-n] 窗口序号
- - Help 显示帮助
- - Exit 退出BossKey
-
-)",
-WelcomeWord =
-LR"(BossKey v0.1.0
-作者：LTS
-==================================
-
-)",
-WrongWord =
-LR"(错误！
-使用Help命令查看帮助
-
-)";
-wstring GetWord();
-inline void GetClear();
-void ListWindow();
-BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam);
-bool HideWindow();
-bool UnHideWindow();
 
 int main()
 {
@@ -271,7 +223,7 @@ bool HideWindow()
 			}
 			Hide_Mode = 1;
 			wcin >> WindowIndex;
-			if (!wcin || GetWord() == L"" && Get_BadInput == 1)
+			if (!wcin)
 			{
 				wcout << WrongWord;
 				return 0;
@@ -285,8 +237,7 @@ bool HideWindow()
 				return 0;
 			}
 			Hide_Mode = 2;
-			wcin >> WindowHwnd->unused;
-			if (!wcin || GetWord() == L"" && Get_BadInput == 1)
+			if (!GetHwnd(WindowHwnd))
 			{
 				wcout << WrongWord;
 				return 0;
@@ -304,7 +255,7 @@ bool HideWindow()
 		wcout << WrongWord;
 		return 0;
 	case 1:
-		if (WindowIndex<1 || WindowIndex>wnum)
+		if (WindowIndex < 1 || WindowIndex > wnum)
 		{
 			wcout << WrongWord;
 			return 0;
@@ -335,7 +286,7 @@ bool UnHideWindow()
 			}
 			Show_Mode = 1;
 			wcin >> WindowIndex;
-			if (!wcin || GetWord() == L"" && Get_BadInput == 1)
+			if (!wcin)
 			{
 				wcout << WrongWord;
 				return 0;
@@ -349,8 +300,7 @@ bool UnHideWindow()
 				return 0;
 			}
 			Show_Mode = 2;
-			wcin >> WindowHwnd->unused;
-			if (!wcin || GetWord() == L"" && Get_BadInput == 1)
+			if (!GetHwnd(WindowHwnd))
 			{
 				wcout << WrongWord;
 				return 0;
@@ -368,7 +318,7 @@ bool UnHideWindow()
 		wcout << WrongWord;
 		return 0;
 	case 1:
-		if (WindowIndex<1 || WindowIndex>wnum)
+		if (WindowIndex < 1 || WindowIndex > wnum)
 		{
 			wcout << WrongWord;
 			return 0;
@@ -379,5 +329,22 @@ bool UnHideWindow()
 		wcout << L"完成\n\n";
 		return 1;
 	}
+	return 1;
+}
+
+bool GetHwnd(HWND& hWnd)
+{
+	long long HwndTemp;
+	wcin >> HwndTemp;
+	if (!wcin)
+	{
+		Get_BadInput = 1;
+		return 0;
+	}
+	wchar_t tempEndLine;
+	wcin.get(tempEndLine);
+	if (tempEndLine == L'\n')
+		Get_EndLine = 1;
+	hWnd = (HWND)HwndTemp;
 	return 1;
 }
