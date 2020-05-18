@@ -228,6 +228,10 @@ bool HideWindow()
 				wcout << WrongWord;
 				return 0;
 			}
+			wchar_t tempEndLine;
+			wcin.get(tempEndLine);
+			if (tempEndLine == L'\n')
+				Get_EndLine = 1;
 		}
 		else if (argument == L"-h")
 		{
@@ -291,6 +295,10 @@ bool UnHideWindow()
 				wcout << WrongWord;
 				return 0;
 			}
+			wchar_t tempEndLine;
+			wcin.get(tempEndLine);
+			if (tempEndLine == L'\n')
+				Get_EndLine = 1;
 		}
 		else if (argument == L"-h")
 		{
