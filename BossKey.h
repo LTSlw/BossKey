@@ -9,7 +9,10 @@ struct window
 	wstring caption;
 };
 
+HINSTANCE mhInstance = NULL;
+TCHAR wcname[] = TEXT("HotKeyWindow");
 bool Get_EndLine = 0, Get_BadInput = 0;
+bool HotKeyOn = 0;
 wstring HelpWord =
 LR"(BossKey°ïÖú
 
@@ -49,8 +52,15 @@ LR"(´íÎó£¡
 
 wstring GetWord();
 inline void GetClear();
+bool GetHwnd(HWND& hWnd);
+void UpperToLower(wstring& upstr);
+bool EndLineTry();
+
 void ListWindow();
 BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam);
 bool HideWindow();
 bool UnHideWindow();
-bool GetHwnd(HWND& hWnd);
+
+bool SetHotKey();
+void HotKeyThreadFunc();
+LRESULT CALLBACK HotKeyWindowProc(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam);
