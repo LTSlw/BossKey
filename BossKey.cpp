@@ -178,6 +178,15 @@ void ListWindow()
 			}
 			List_Mode = 2;
 		}
+		else if (argument == L"-t")
+		{
+			if (List_Mode != 0)
+			{
+				wcout << WrongWord;
+				return;
+			}
+			List_Mode = 3;
+		}
 		else if (argument == L"-o")
 		{
 			if (List_Fresh != 0)
@@ -229,30 +238,29 @@ BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam)
 {
 	TCHAR Caption[200]{};
 	GetWindowText(hWnd, Caption, 200);
-	if (lParam == 0 || lParam == 1)
+	switch (lParam)
 	{
+	case 0:
+	case 3:
+		if (IsWindowVisible(hWnd) && (GetWindowLong(hWnd, GWL_EXSTYLE) & WS_EX_TOOLWINDOW) != WS_EX_TOOLWINDOW && GetWindowLong(hWnd, GWLP_HWNDPARENT) == 0)
+			break;
+		else
+			return TRUE;
+	case 1:
 		if (wcscmp(Caption, TEXT("")) == 0)
 			return TRUE;
-		++wnum;
-		if (wnum == 1001)
-		{
-			wcout << L"扫描到的窗口超过1000，后面的将被舍去";
-			return FALSE;
-		}
-		windows[wnum].caption = Caption;
-		windows[wnum].hd = hWnd;
+		break;
+	case 2:
+		break;
 	}
-	else if (lParam == 2)
+	++wnum;
+	if (wnum == 1001)
 	{
-		++wnum;
-		if (wnum == 1001)
-		{
-			wcout << L"扫描到的窗口超过1000，后面的将被舍去";
-			return FALSE;
-		}
-		windows[wnum].caption = Caption;
-		windows[wnum].hd = hWnd;
+		wcout << L"扫描到的窗口超过1000，后面的将被舍去";
+		return FALSE;
 	}
+	windows[wnum].caption = Caption;
+	windows[wnum].hd = hWnd;
 	return TRUE;
 }
 
